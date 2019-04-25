@@ -1,6 +1,18 @@
 const express = require('express');
 
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+require('dotenv').congig();
+const cookieParser = require('cookie-parser');
+
 const app = express();
+
+mongoose.Promise=global.Promise;        //để setup mongoose ? chưa biết để làm gì
+mongoose.connect(process.env.DATABASE, {useNewUrlParser: true});
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(cookieParser());
 
 const port = process.env.PORT ||3002;     // gán port bằng 1 enviroment variable
 
