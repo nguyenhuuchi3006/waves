@@ -2,7 +2,7 @@ const express = require('express');
 
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-require('dotenv').congig();
+require('dotenv').config();
 const cookieParser = require('cookie-parser');
 
 const app = express();
@@ -20,9 +20,17 @@ const { User } = require('./models/user');
 //             USER    
 // ================================
 
-app.post('/api/users/register',(req,res)=>{
+app.post('/api/users/register',(req,res)=>{             // tao mot user moi bang postman
 
-    res.status(200);
+    const user = new User(req.body);
+
+    user.save((err,doc)=>{
+        if(err) return res.json({success: false, err});
+        res.status(200).json({
+            success: true,
+            userdata: doc                           // doc se la ...{email:'', pass: '',...} destructuring 
+        })
+    })
 })
 
 
