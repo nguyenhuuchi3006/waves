@@ -1,0 +1,3 @@
+- tạo 2 folder server và client
+- khởi tạo npm (npm init) cho server
+- cài đặt các package cần thiết (express, body-parser, mongoose)
