@@ -28,9 +28,33 @@ app.post('/api/users/register',(req,res)=>{             // tao mot user moi bang
         if(err) return res.json({success: false, err});
         res.status(200).json({
             success: true,
-            userdata: doc                           // doc se la ...{email:'', pass: '',...} destructuring 
+            userdata: doc                           // doc se la object {email:'', pass: '',...}
+        })
+    });
+});
+
+app.post('/api/users/login', (req,res)=>{
+
+    //find the email
+    //check password
+    //generate a token                              ? chua biet de lam gi - hinh nhu de dung cho cookie
+
+    User.findOne({'email': req.body.email}, (err,user)=>{
+        if(!user) return res.json({loginSuccess: false, message: 'Auth failes, email not found'});
+
+        user.comparePassword(req.body.password, (err, isMatch)=>{
+            if(!isMatch) return res.json({loginSuccess: false, message: 'Wrong password'});
+
+            user.generateToken((err,user)=>{
+                if(err) return res.status(400).send(err);
+                res.cookie('x_auth',user.token).status(200).json({
+                    loginSuccess: true
+                })
+            })
         })
     })
+
+
 })
 
 
