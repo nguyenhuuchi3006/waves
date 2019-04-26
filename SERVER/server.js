@@ -39,6 +39,19 @@ app.get('/api/users/auth',auth, (req, res)=>{
     })
 })
 
+app.get('/api/users/logout',auth,(req,res)=> {
+    User.findOneAndUpdate(
+        {_id: req.user._id},
+        {token: ''},                    // nay bi update
+        (err,doc)=>{
+            if(err) return res.json({success: false,err});
+
+            return res.status(200).send({
+                success: true,
+            })
+        }
+    )
+})
 
 app.post('/api/users/register',(req,res)=>{             // tao mot user moi bang postman
 
