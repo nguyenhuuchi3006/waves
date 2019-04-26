@@ -48,6 +48,7 @@ const userSchema = mongoose.Schema({
 
 });
 
+//hash password
 userSchema.pre('save', function(next){                  // truoc khi user.save((err,doc)) thi no lam ham nay
     var user = this;
 
@@ -68,6 +69,7 @@ userSchema.pre('save', function(next){                  // truoc khi user.save((
     }
 });
 
+
 userSchema.methods.comparePassword = function(candidatePassword,cb){
     bcrypt.compare(candidatePassword,this.password,function(err,isMatch){
         if(err) return cb(err);
@@ -83,6 +85,18 @@ userSchema.methods.generateToken = function(cb){
     user.save(function(err, user){
         if(err) return cb(err);
         cb(null,user);
+    })
+}
+
+userSchema.statics.findByToken = function(token, cb) {
+    var user = this;
+
+    jwt.verify(token, process.env.SECRET, function(err,decode){              // se giai ma (decode) duoc _id cua user
+        user.findOne({"_id":decode, "token":token},function(err, user){
+            if(err) return cb(err);
+
+            cb(null,user);
+        })
     })
 }
 
