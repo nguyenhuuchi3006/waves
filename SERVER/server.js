@@ -69,6 +69,32 @@ app.get('/api/product/articles_by_id', (req,res)=>{
 })
 
 
+//BY ARRIVAL
+// /articles?sortBy=createdAt&order=-1&limit=4                // lay 4 cai ms nhat -1 la decs 1 la asc
+
+
+//BY SELL
+// /articles?sortBy=sold&order=-1&limit=4                
+
+app.get('/api/product/articles',(req,res)=>{
+
+    let order = req.query.order ? req.query.order: '1';
+    let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
+    let limit = req.query.limit ? parseInt(req.query.limit) : 100;
+
+    Product.
+    find().
+    populate('brand').
+    populate('wood').
+    sort([[sortBy,order]]).
+    limit(limit).
+    exec((err,articles) => {
+        if(err) return res.status(400).send(err);
+        res.send(articles)
+    })
+})
+
+
 // ================================
 //             BRAND    
 // ================================
