@@ -45,7 +45,28 @@ app.post('/api/product/article',auth,admin,(req,res)=>{
 })
 
 
+// /api/product/articles?id=hkhjkh,jhfkdhjfk,dfkdjf&type=single         // type la single or array (1 product or nhieu)
+app.get('/api/product/articles_by_id', (req,res)=>{
+    let type = req.query.type;
+    let items = req.query.id;
 
+    if(type === 'array') {
+        let ids = req.query.id.split(',');
+        items = [];
+        items = ids.map(item => {                               // chuyen sang kieu ObjectId giong trong mongo
+            return mongoose.Types.ObjectId(item)
+        });
+
+    }
+
+    Product.
+    find({'_id': {$in: items}}).                                        // muon tim nhieu thi dung nhu nay
+    populate('brand').                      // neu khog co thi chi hien thi id cua brand thoi
+    populate('wood').                           // co thi se hien thi tat ca (name, ... )
+    exec((err, docs)=>{
+        return res.status(200).send(docs)
+    })
+})
 
 
 // ================================
